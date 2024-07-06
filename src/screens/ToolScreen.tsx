@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import { Text, IconButton } from 'react-native-paper';
+import { Text, IconButton, Button, Card, TextInput as PaperTextInput } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import { RootStackParamList } from '../constants/types';
@@ -46,35 +46,35 @@ const ToolScreen: React.FC = () => {
     try {
       let response;
       if (audioReady && recordingURI) {
-        console.log("Sending audio feedback request...");
+        console.log("Enviando solicitud de retroalimentación de audio...");
         response = await getFeedbackFromAudio(word.english, recordingURI);
       } else if (userInput) {
-        console.log("Sending text feedback request...");
+        console.log("Enviando solicitud de retroalimentación de texto...");
         response = await getFeedback(word.english, userInput);
       } else {
-        console.warn("No audio or text input available for feedback");
+        console.warn("No hay entrada de audio o texto disponible para retroalimentación");
         return;
       }
       
-      console.log("Feedback response:", response);
+      console.log("Respuesta de retroalimentación:", response);
       
       if (response && response.length > 0) {
         setFeedback(response[0].feedback);
         setPass(response[0].pass);
       } else {
-        console.warn("Received empty response from feedback request");
+        console.warn("Recibida respuesta vacía de la solicitud de retroalimentación");
       }
     } catch (error) {
-      console.error("Error fetching feedback:", error);
+      console.error("Error al obtener la retroalimentación:", error);
     }
   };
 
-const startRecording = async () => {
+  const startRecording = async () => {
     try {
       await AudioRecordingService.startRecording();
       setIsRecording(true);
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error('Error al empezar la grabación', err);
     }
   };
 
@@ -87,19 +87,20 @@ const startRecording = async () => {
         const info = await AudioRecordingService.getAudioInfo(uri);
         setRecordingInfo(info);
         setAudioReady(true);
-        console.log(`Recording saved: ${info.uri}, Size: ${info.size} bytes`);
+        console.log(`Grabación guardada: ${info.uri}, Tamaño: ${info.size} bytes`);
       }
     } catch (err) {
-      console.error('Failed to stop recording', err);
+      console.error('Error al detener la grabación', err);
     }
   };
+
   const playRecording = async () => {
     if (recordingURI) {
       try {
         const { sound } = await Audio.Sound.createAsync({ uri: recordingURI });
         await sound.playAsync();
       } catch (error) {
-        console.error('Error playing recording:', error);
+        console.error('Error al reproducir la grabación:', error);
       }
     }
   };
@@ -109,35 +110,53 @@ const startRecording = async () => {
     await sound.playAsync();
   };
 
-
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Image source={word.image} style={styles.image} />
         <Text style={styles.title}>{word.english}</Text>
         <Text style={styles.subtitle}>{word.spanish}</Text>
-        <Text style={styles.example}>{exampleEng}</Text>
-        <Text style={styles.example}>{exampleSpa}</Text>
+        
+        <Card style={styles.exampleCard}>
+          <Card.Title title="Oración en Inglés" />
+          <Card.Content>
+            <Text style={styles.example}>{exampleEng}</Text>
+          </Card.Content>
+        </Card>
+        
+        <Card style={styles.exampleCard}>
+          <Card.Title title="Traducción al Español" />
+          <Card.Content>
+            <Text style={styles.example}>{exampleSpa}</Text>
+          </Card.Content>
+        </Card>
+
         <Text style={styles.sentenceHelp}>{sentenceHelp}</Text>
-        <IconButton
-          icon="volume-high"
-          size={30}
-          onPress={playSound}
-          style={styles.iconButton}
-        />
-        <TextInput
+        <View style={styles.iconWithLabel}>
+          <IconButton
+            icon="volume-high"
+            size={30}
+            onPress={playSound}
+            style={styles.iconButton}
+          />
+          <Text style={styles.label}>Reproducir Sonido</Text>
+        </View>
+        <Text style={styles.inputLabel}>Por favor escribe aquí una oración en inglés con la palabra {word.english}:</Text>
+        <PaperTextInput
+          mode="outlined"
           style={styles.input}
-          placeholder="Enter your sentence"
+          placeholder="Ingrese su oración"
           value={userInput}
           onChangeText={setUserInput}
         />
-       <TouchableOpacity
-  style={[styles.button, (!audioReady && !userInput) ? styles.disabledButton : null]}
-  onPress={handleUserInput}
-  disabled={!audioReady && !userInput}
->
-  <Text style={styles.buttonText}>Get Feedback</Text>
-</TouchableOpacity>
+        <Button
+          mode="contained"
+          style={styles.button}
+          onPress={handleUserInput}
+          disabled={!audioReady && !userInput}
+        >
+          Obtener Retroalimentación
+        </Button>
         {feedback && (
           <View style={styles.feedbackContainer}>
             <Text style={styles.feedback}>{feedback}</Text>
@@ -149,22 +168,24 @@ const startRecording = async () => {
           </View>
         )}
         <View style={styles.recordContainer}>
-          <TouchableOpacity
+          <Button
+            mode="contained"
             style={styles.button}
             onPress={isRecording ? stopRecording : startRecording}
           >
-            <Text style={styles.buttonText}>{isRecording ? 'Stop Recording' : 'Start Recording'}</Text>
-          </TouchableOpacity>
+            {isRecording ? 'Detener Grabación' : 'Empezar Grabación'}
+          </Button>
           {recordingInfo && (
-            <TouchableOpacity
+            <Button
+              mode="contained"
               style={styles.button}
               onPress={playRecording}
             >
-              <Text style={styles.buttonText}>Play Recording</Text>
+              Reproducir Grabación
               {audioReady && (
-  <Text style={styles.audioReadyText}>Audio Ready</Text>
-)}
-            </TouchableOpacity>
+                <Text style={styles.audioReadyText}>Audio Listo</Text>
+              )}
+            </Button>
           )}
         </View>
       </View>
@@ -182,15 +203,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
-  image: { width: 200, height: 200, marginBottom: 20 },
-  title: { fontSize: 24, fontWeight: 'bold' },
-  subtitle: { fontSize: 18, color: 'gray' },
-  example: { fontSize: 16, marginVertical: 10, textAlign: 'center', paddingHorizontal: 20 },
-  sentenceHelp: { fontSize: 16, marginVertical: 10, fontStyle: 'italic', textAlign: 'center', paddingHorizontal: 20 },
-  iconButton: { marginTop: 20 },
-  input: { width: '80%', padding: 10, borderColor: 'gray', borderWidth: 1, marginBottom: 10 },
-  button: { backgroundColor: 'blue', padding: 10, borderRadius: 5, marginVertical: 10, width: '80%', alignItems: 'center' },
-  buttonText: { color: 'white', fontSize: 16 },
+  image: { 
+    width: 200, 
+    height: 200, 
+    marginBottom: 20 
+  },
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold' 
+  },
+  subtitle: { 
+    fontSize: 18, 
+    color: 'gray' 
+  },
+  exampleCard: {
+    width: '80%',
+    marginVertical: 10,
+  },
+  example: { 
+    fontSize: 16, 
+    textAlign: 'center' 
+  },
+  sentenceHelp: { 
+    fontSize: 16, 
+    marginVertical: 10, 
+    fontStyle: 'italic', 
+    textAlign: 'center', 
+    paddingHorizontal: 20 
+  },
+  iconWithLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  iconButton: { 
+    marginRight: 10 
+  },
+  label: { 
+    fontSize: 16 
+  },
+  inputLabel: {
+    width: '80%', 
+    fontSize: 16, 
+    marginVertical: 10, 
+    textAlign: 'center'
+  },
+  input: { 
+    width: '80%', 
+    marginBottom: 10 
+  },
+  button: { 
+    marginVertical: 10, 
+    width: '80%', 
+    alignItems: 'center' 
+  },
   feedbackContainer: { 
     flexDirection: 'row', 
     alignItems: 'center', 
@@ -204,16 +270,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
   },
-  disabledButton: {
-    backgroundColor: 'gray',
-  },
   feedback: { 
     fontSize: 16, 
     marginRight: 10, 
     flexShrink: 1,
     textAlign: 'center'
   },
-  recordContainer: { marginTop: 20, width: '100%', alignItems: 'center' },
+  recordContainer: { 
+    marginTop: 20, 
+    width: '100%', 
+    alignItems: 'center' 
+  },
 });
 
 export default ToolScreen;
