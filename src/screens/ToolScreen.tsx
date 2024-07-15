@@ -175,16 +175,16 @@ const ToolScreen: React.FC = () => {
           </View>
         )}
 
-            {inputMode !== null && (
-              <Button
-                mode="outlined"
-                icon="reload" // Añadido: icono de flecha circular
-                style={styles.backButton}
-                onPress={resetInputMode}
-              >
-                Cambiar entre audio y texto
-              </Button>
-            )}
+        {inputMode !== null && (
+          <Button
+            mode="outlined"
+            icon="reload" // Añadido: icono de flecha circular
+            style={[styles.backButton, styles.orangeButton]}
+            onPress={resetInputMode}
+          >
+            Cambiar entre audio y texto
+          </Button>
+        )}
 
         {inputMode === 'text' && (
           <>
@@ -259,12 +259,12 @@ const ToolScreen: React.FC = () => {
           </View>
         )}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.goBackButton}
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.goBackButtonText}>← Regresar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -344,11 +344,21 @@ const styles = StyleSheet.create({
     width: '80%', 
     alignItems: 'center',
     backgroundColor: '#ADD8E6', // Azul claro
+    shadowColor: '#000', // Sombra del botón
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Para Android, agrega un poco de elevación
   },
   backButton: {
     width: '80%',
     marginVertical: 10,
     alignItems: 'center',
+  },
+  orangeButton: {
+    borderColor: '#FFA500', // Anaranjado
+    borderWidth: 1,
+    backgroundColor: '#FFA500', // Anaranjado
   },
   feedbackContainer: { 
     flexDirection: 'row', 
