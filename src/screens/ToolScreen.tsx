@@ -170,7 +170,7 @@ const ToolScreen: React.FC = () => {
         <View style={styles.recordContainer}>
           <Button
             mode="contained"
-            style={styles.button}
+            style={[styles.button, styles.recordButton]}
             onPress={isRecording ? stopRecording : startRecording}
           >
             {isRecording ? 'Detener Grabación' : 'Empezar Grabación'}
@@ -206,30 +206,40 @@ const styles = StyleSheet.create({
   image: { 
     width: 200, 
     height: 200, 
-    marginBottom: 20 
+    marginBottom: 20,
+    borderRadius: 100,
+    borderColor: '#ADD8E6', // Azul claro
+    borderWidth: 2,
   },
   title: { 
     fontSize: 24, 
-    fontWeight: 'bold' 
+    fontWeight: 'bold',
+    color: '#4682B4', // Azul más oscuro
   },
   subtitle: { 
     fontSize: 18, 
-    color: 'gray' 
+    color: '#708090', // Gris azulado
   },
   exampleCard: {
     width: '80%',
     marginVertical: 10,
+    backgroundColor: '#F5F5F5', // Gris claro
+    borderColor: '#ADD8E6', // Azul claro
+    borderWidth: 1,
+    borderRadius: 10,
   },
   example: { 
     fontSize: 16, 
-    textAlign: 'center' 
+    textAlign: 'center',
+    color: '#333333', // Gris oscuro
   },
   sentenceHelp: { 
     fontSize: 16, 
     marginVertical: 10, 
     fontStyle: 'italic', 
     textAlign: 'center', 
-    paddingHorizontal: 20 
+    paddingHorizontal: 20,
+    color: '#4682B4', // Azul más oscuro
   },
   iconWithLabel: {
     flexDirection: 'row',
@@ -237,25 +247,30 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   iconButton: { 
-    marginRight: 10 
+    marginRight: 10,
+    backgroundColor: '#ADD8E6', // Azul claro
   },
   label: { 
-    fontSize: 16 
+    fontSize: 16,
+    color: '#4682B4', // Azul más oscuro
   },
   inputLabel: {
     width: '80%', 
     fontSize: 16, 
     marginVertical: 10, 
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#4682B4', // Azul más oscuro
   },
   input: { 
     width: '80%', 
-    marginBottom: 10 
+    marginBottom: 10,
+    borderColor: '#ADD8E6', // Azul claro
   },
   button: { 
     marginVertical: 10, 
     width: '80%', 
-    alignItems: 'center' 
+    alignItems: 'center',
+    backgroundColor: '#ADD8E6', // Azul claro
   },
   feedbackContainer: { 
     flexDirection: 'row', 
@@ -281,6 +296,9 @@ const styles = StyleSheet.create({
     width: '100%', 
     alignItems: 'center' 
   },
+  recordButton: {
+    backgroundColor: '#FF7F7F', // Rojo claro
+  }
 });
 
 export default ToolScreen;

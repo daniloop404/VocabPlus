@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { Text, Card } from 'react-native-paper';
+import { View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Text, Card, Button } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import categories from '../constants/categories';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -50,13 +50,20 @@ const WordSelectionScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Palabras</Text>
       <FlatList
         data={groupedWords}
         keyExtractor={(_, index) => index.toString()}
         renderItem={renderItem}
       />
-    </View>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Regresar</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
@@ -65,6 +72,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: 16,
+    paddingBottom: 8,
   },
   row: {
     flexDirection: 'row',
@@ -86,6 +100,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 4,
     color: 'gray',
+  },
+  backButton: {
+    position: 'absolute',
+    bottom: 16,
+    left: '50%',
+    transform: [{ translateX: -50 }],
+    backgroundColor: '#d32f2f', // Color del botón
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    shadowColor: '#000', // Sombra del botón
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Para Android, agrega un poco de elevación
+  },
+  backButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

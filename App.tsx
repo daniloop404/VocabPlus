@@ -14,7 +14,11 @@ export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Home"
+          screenOptions={{
+            headerShown: false // Oculta el header de todas las pantallas
+          }}
+        >
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Category" component={CategoryScreen} />
           <Stack.Screen name="WordSelection" component={WordSelectionScreen} />

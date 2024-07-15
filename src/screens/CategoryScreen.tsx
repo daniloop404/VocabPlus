@@ -13,6 +13,7 @@ const CategoryScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Categorías</Text>
       <FlatList
         data={categories}
         keyExtractor={(item) => item.name}
@@ -39,8 +40,14 @@ const CategoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: 16,
+    paddingBottom: 8,
   },
   card: {
     flex: 1,
