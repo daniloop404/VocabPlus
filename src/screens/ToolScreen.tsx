@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Text, IconButton, Button, Card, TextInput as PaperTextInput } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Audio } from 'expo-av';
@@ -130,14 +130,14 @@ const ToolScreen: React.FC = () => {
         <Text style={styles.subtitle}>{word.spanish}</Text>
         
         <Card style={styles.exampleCard}>
-          <Card.Title title="Oración en Inglés" />
+          <Card.Title title="Oración en Inglés:" titleStyle={styles.cardTitle} />
           <Card.Content>
             <Text style={styles.example}>{exampleEng}</Text>
           </Card.Content>
         </Card>
         
         <Card style={styles.exampleCard}>
-          <Card.Title title="Traducción al Español" />
+          <Card.Title title="Traducción al Español:" titleStyle={styles.cardTitle} />
           <Card.Content>
             <Text style={styles.example}>{exampleSpa}</Text>
           </Card.Content>
@@ -150,6 +150,7 @@ const ToolScreen: React.FC = () => {
             size={30}
             onPress={playSound}
             style={styles.iconButton}
+            iconColor="black"
           />
           <Text style={styles.label}>Reproducir Sonido</Text>
         </View>
@@ -161,6 +162,7 @@ const ToolScreen: React.FC = () => {
               mode="contained"
               style={[styles.modeButton, styles.selectionButton]}
               onPress={() => setInputMode('text')}
+              labelStyle={styles.buttonText} // Color del texto del botón
             >
               Ingresar Texto
             </Button>
@@ -169,6 +171,7 @@ const ToolScreen: React.FC = () => {
               mode="contained"
               style={[styles.modeButton, styles.selectionButton]}
               onPress={() => setInputMode('audio')}
+              labelStyle={styles.buttonText} // Color del texto del botón
             >
               Ingresar Audio
             </Button>
@@ -181,6 +184,8 @@ const ToolScreen: React.FC = () => {
             icon="reload" // Añadido: icono de flecha circular
             style={[styles.backButton, styles.orangeButton]}
             onPress={resetInputMode}
+            textColor="black" // Texto negro
+            labelStyle={styles.buttonText} // Color del texto del botón
           >
             Cambiar entre audio y texto
           </Button>
@@ -195,15 +200,17 @@ const ToolScreen: React.FC = () => {
               placeholder="Ingrese su oración"
               value={userInput}
               onChangeText={setUserInput}
+              placeholderTextColor="#708090" // Color del texto del placeholder
             />
             <Button
               mode="contained"
               style={[
                 styles.button,
-                { backgroundColor: userInput ? '#4CAF50' : '#ADD8E6' } // Verde cuando habilitado
+                { backgroundColor: userInput ? '#4CAF50' : '#A9A9A9' } // Verde cuando habilitado, gris oscuro cuando deshabilitado
               ]}
               onPress={handleUserInput}
               disabled={!userInput}
+              labelStyle={styles.buttonText} // Color del texto del botón
             >
               Obtener Retroalimentación
             </Button>
@@ -218,6 +225,7 @@ const ToolScreen: React.FC = () => {
                 mode="contained"
                 style={[styles.button, styles.recordButton]}
                 onPress={isRecording ? stopRecording : startRecording}
+                labelStyle={styles.buttonText} // Color del texto del botón
               >
                 {isRecording ? 'Detener Grabación' : 'Empezar Grabación'}
               </Button>
@@ -226,6 +234,7 @@ const ToolScreen: React.FC = () => {
                   mode="contained"
                   style={styles.button}
                   onPress={playRecording}
+                  labelStyle={styles.buttonText} // Color del texto del botón
                 >
                   Reproducir Grabación
                   {audioReady && (
@@ -238,17 +247,18 @@ const ToolScreen: React.FC = () => {
               mode="contained"
               style={[
                 styles.button,
-                { backgroundColor: audioReady ? '#4CAF50' : '#ADD8E6' } // Verde cuando habilitado
+                { backgroundColor: audioReady ? '#4CAF50' : '#A9A9A9' } // Verde cuando habilitado, gris oscuro cuando deshabilitado
               ]}
               onPress={handleUserInput}
               disabled={!audioReady}
+              labelStyle={styles.buttonText} // Color del texto del botón
             >
               Obtener Retroalimentación
             </Button>
           </>
         )}
 
-        {feedback && (
+        {feedback !== '' && (
           <View style={styles.feedbackContainer}>
             <Text style={styles.feedback}>{feedback}</Text>
             <IconButton
@@ -258,13 +268,6 @@ const ToolScreen: React.FC = () => {
             />
           </View>
         )}
-
-        {/* <TouchableOpacity
-          style={styles.goBackButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.goBackButtonText}>← Regresar</Text>
-        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -297,14 +300,17 @@ const styles = StyleSheet.create({
     width: '80%',
     marginVertical: 10,
     backgroundColor: '#F5F5F5', // Gris claro
-    borderColor: '#ADD8E6', // Azul claro
+    borderColor: '#6D98D8', // Azul claro
     borderWidth: 1,
     borderRadius: 10,
   },
   example: { 
     fontSize: 16, 
     textAlign: 'center',
-    color: '#333333', // Gris oscuro
+    color: 'black', // Negro
+  },
+  cardTitle: {
+    color: 'black', // Negro
   },
   sentenceHelp: { 
     fontSize: 16, 
@@ -312,7 +318,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic', 
     textAlign: 'center', 
     paddingHorizontal: 20,
-    color: '#4682B4', // Azul más oscuro
+    color: '#6D98D8', // Azul más oscuro
   },
   iconWithLabel: {
     flexDirection: 'row',
@@ -321,34 +327,37 @@ const styles = StyleSheet.create({
   },
   iconButton: { 
     marginRight: 10,
-    backgroundColor: '#ADD8E6', // Azul claro
+    backgroundColor: '#6D98D8', // Azul claro
   },
   label: { 
     fontSize: 16,
-    color: '#4682B4', // Azul más oscuro
+    color: '#6D98D8', // Azul más oscuro
   },
   inputLabel: {
     width: '80%', 
     fontSize: 16, 
     marginVertical: 10, 
     textAlign: 'center',
-    color: '#4682B4', // Azul más oscuro
+    color: '#6D98D8', // Azul más oscuro
   },
   input: { 
     width: '80%', 
     marginBottom: 10,
-    borderColor: '#ADD8E6', // Azul claro
+    borderColor: '#6D98D8', // Azul claro
   },
   button: { 
     marginVertical: 10, 
     width: '80%', 
     alignItems: 'center',
-    backgroundColor: '#ADD8E6', // Azul claro
+    backgroundColor: '#6D98D8', // Azul claro
     shadowColor: '#000', // Sombra del botón
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5, // Para Android, agrega un poco de elevación
+  },
+  buttonText: {
+    color: 'black', // Color del texto del botón
   },
   backButton: {
     width: '80%',
@@ -377,7 +386,8 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     marginRight: 10, 
     flexShrink: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: 'black', // Negro
   },
   recordContainer: { 
     marginTop: 20, 
@@ -396,11 +406,11 @@ const styles = StyleSheet.create({
   },
   modeButton: {
     marginHorizontal: 5, // Reducido de 10 a 5
-    backgroundColor: '#ADD8E6',
+    backgroundColor: '#6D98D8',
     width: '45%', // Añadido para que cada botón ocupe aproximadamente la mitad del espacio
   },
   selectionButton: {
-    backgroundColor: '#ADD8E6', // Azul claro para los botones de selección
+    backgroundColor: '#6D98D8', // Azul claro para los botones de selección
   },
   goBackButton: {
     marginVertical: 20,

@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 16,
     paddingBottom: 8,
+    color:'black'
   },
   card: {
     flex: 1,
